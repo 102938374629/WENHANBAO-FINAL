@@ -1,0 +1,96 @@
+
+# Fitness Tracker
+# video link:https://youtu.be/46Qy0U_PTtg?si=oOGGRyys_KOEufUk
+The purpose of this program is to help users can record their exercise data, to help users better manage the exercise time, its main functions include:
+- Set exercise goals (total exercise time & total calories burned)
+- Record daily exercise (exercise time & calories burned)
+- View current progress (Completed & remaining exercise)
+- Clear all data (reset all records, start over)
+
+The program uses JSON for persistent storage, ensuring that data is not lost after the program is closed
+Set movement goals - Allows the user to enter a total goal (e.g. 500 minutes & 3000 calories).
+** Record sports data - Users can add sports records step by step, and the system automatically accumulates them. **
+** View current progress - The system automatically calculates the amount of exercise completed and displays a comparison to the goal. **
+** Clear all data - Users have the option to reset all data and start a new training program. **
+** Persistent data storage - Use JSON to store data, ensuring that the data will not be lost after the program is closed. **
+
+## load_data
+def load_data(self):
+    """Load the data file or create the default data if it does not exist。"""
+    if os.path.exists(DATA_FILE):
+        try:
+            with open(DATA_FILE, "r") as f:
+                data = json.load(f)
+        except json.JSONDecodeError:
+            print("⚠️ Corrupt JSON file found, resetting data...") )
+            data = self.default_data()
+            self.save_data(data)
+    else:
+        data = self.default_data()
+        self.save_data(data)
+
+    return data
+## set goal() - Set the movement goal
+def set_goal(self, total_minutes, total_calories):
+    """Set overall movement goals. ""
+    self.data["goal"]["total_minutes"] = total_minutes
+    self.data["goal"]["total_calories"] = total_calories
+    self.save_data()
+    print("✅ Sport goal has been updated!")
+## add record() - Records motion data
+def add_record(self, minutes, calories):
+    """累加运动数据。"""
+    if minutes < 0 or calories < 0:
+        print("❌ input error, exercise time and calories must be positive!")
+        return
+
+    self.data["records"]["total_minutes"] += minutes
+    self.data["records"]["total_calories"] += calories
+    self.save_data()
+    print("✅ Motion data recorded！")
+## get statistics() - Check your progress
+def get_statistics(self):
+    """Get current motion data."""
+    return {
+        "total_minutes": self.data["records"]["total_minutes"],
+        "total_calories": self.data["records"]["total_calories"],
+        "goal_minutes": self.data["goal"]["total_minutes"],
+        "goal_calories": self.data["goal"]["total_calories"],
+        "remaining_minutes": max(self.data["goal"]["total_minutes"] - self.data["records"]["total_minutes"], 0),
+        "remaining_calories": max(self.data["goal"]["total_calories"] - self.data["records"]["total_calories"], 0),
+    }
+## clear data() - Reset all data
+    def clear_data(self):
+    """clear all data"""
+    self.data = self.default_data()
+    self.save_data()
+    print("🗑️ all date has reset！")
+### Example Interaction  
+🏃 Exercise Tracker Menu
+1️⃣ Set Exercise Goal
+2️⃣ Record Exercise Data
+3️⃣ View Exercise Data
+4️⃣ Clear All Data
+5️⃣ Exit
+🔹 Enter your choice: 1
+
+💪 Enter total exercise goal (minutes): 500
+🔥 Enter total calorie burn goal (kcal): 3000
+✅ Exercise goal updated!
+
+🔹 Enter your choice: 2
+📌 Enter exercise duration (minutes): 100
+📌 Enter calories burned (kcal): 500
+✅ Exercise data recorded!
+
+🔹 Enter your choice: 3
+📊 Exercise Data Summary
+==============================
+🏅 Total Exercise Time: 100 minutes | Goal: 500 minutes
+🔥 Total Calories Burned: 500 kcal | Goal: 3000 kcal
+🎯 Goal vs. Actual
+⚠️ Remaining 400 minutes of exercise
+⚠️ Remaining 2500 kcal to burn
+
+*** Summary: This Fitness Tracker is a highly recommended health exercise monitoring tool designed to help users effectively manage and record their exercise routines. The program allows users to set exercise goals, track progress, and ensure they stay on course to meet their fitness targets. It provides a user-friendly interface where users can input their exercise duration and calories burned, and the system automatically updates the accumulated data *** 
+Footer
